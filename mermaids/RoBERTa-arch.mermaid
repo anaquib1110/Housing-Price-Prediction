@@ -1,0 +1,20 @@
+flowchart TB
+    subgraph RoBERTa["RoBERTa Architecture"]
+        direction TB
+        input["Input Text"] --> tok["Tokenization (Byte-Level BPE)"]
+        tok --> embed["Token + Position Embeddings (No Segment)"]
+        embed --> layer1["Transformer Encoder Layer 1"]
+        layer1 --> layer2["Transformer Encoder Layer 2"]
+        layer2 --> layerdots["..."]
+        layerdots --> layer12["Transformer Encoder Layer 12"]
+        layer12 --> cls["[CLS] Token Representation"]
+        
+        subgraph "Transformer Encoder Layer"
+            direction TB
+            mha["Multi-Head Attention"] --> add1["Add & Norm"]
+            add1 --> ffn["Feed Forward Network"]
+            ffn --> add2["Add & Norm"]
+        end
+    end
+    
+    style RoBERTa fill:#fff0f5,stroke:#333,stroke-width:2px

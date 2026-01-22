@@ -1,0 +1,32 @@
+flowchart TB
+    input["Input Text + Keyword + Location"] --> preproc["Text Preprocessing"]
+    
+    preproc --> bertTok["BERT Tokenizer"]
+    preproc --> robertaTok["RoBERTa Tokenizer"]
+    
+    subgraph BERT["BERT Branch"]
+        direction TB
+        bertTok --> bertEmbed["BERT Embeddings"]
+        bertEmbed --> bertEnc["BERT Encoder Layers (12)"]
+        bertEnc --> bertCLS["BERT [CLS] Token"]
+        bertCLS --> bertDrop["Dropout (0.3)"]
+    end
+    
+    subgraph RoBERTa["RoBERTa Branch"]
+        direction TB
+        robertaTok --> robertaEmbed["RoBERTa Embeddings"]
+        robertaEmbed --> robertaEnc["RoBERTa Encoder Layers (12)"]
+        robertaEnc --> robertaCLS["RoBERTa [CLS] Token"]
+        robertaCLS --> robertaDrop["Dropout (0.3)"]
+    end
+    
+    bertDrop & robertaDrop --> concat["Feature Concatenation"]
+    concat --> fc1["Fully Connected Layer (768*2 → 512)"]
+    fc1 --> relu["ReLU Activation"]
+    relu --> drop["Dropout (0.3)"]
+    drop --> fc2["Fully Connected Layer (512 → 2)"]
+    fc2 --> softmax["Softmax"]
+    softmax --> output["Output: Disaster (1) / Not Disaster (0)"]
+    
+    style BERT fill:#f5f5ff,stroke:#333,stroke-width:2px
+    style RoBERTa fill:#fff0f5,stroke:#333,stroke-width:2px
